@@ -1,4 +1,7 @@
 // MARK: FilteredListView.swift
+/**
+ We want to be able to create a custom fetch request inside an initializer :
+ */
 
 import SwiftUI
 import CoreData
@@ -17,7 +20,7 @@ struct FilteredListView: View {
      However , we don’t create the fetch request here ,
      because we still don’t know what we are searching for .
      Instead , we are going to create a custom initializer
-     that accepts a filter string
+     that accepts a `filter` string
      and uses that to set the `fetchRequest` property .
      */
     
@@ -25,7 +28,10 @@ struct FilteredListView: View {
     
      // //////////////////////////
     //  MARK: COMPUTED PROPERTIES
-    
+    /**
+     If you don’t like using `fetchRequest.wrappedValue` in `ForEach`,
+     you could create a simple computed property like this :
+     */
     var singers: FetchedResults<Singer> {
         
         return fetchRequest.wrappedValue
@@ -36,7 +42,7 @@ struct FilteredListView: View {
         
         List {
             ForEach(singers , id : \.self) { (singer: Singer) in
-                Text("\(singer.computedFirstName) \(singer.computedLastName)")
+                Text("\(singer.wrappedFirstName) \(singer.wrappedLastName)")
             }
         }
     }

@@ -22,13 +22,13 @@ extension Singer {
      // //////////////////////////
     //  MARK: COMPUTED PROPERTIES
     
-    var computedFirstName: String {
+    var wrappedFirstName: String {
         
         return firstName ?? "N/A"
     }
     
     
-    var computedLastName: String {
+    var wrappedLastName: String {
         
         return lastName ?? "N/A"
     }
