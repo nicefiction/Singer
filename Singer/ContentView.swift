@@ -1,80 +1,97 @@
-//
-//  ContentView.swift
-//  Singer
-//
-//  Created by Olivier Van hamme on 09/05/2021.
-//
+// MARK: ContentView.swift
+/**
+ SOURCE :
+ https://www.hackingwithswift.com/books/ios-swiftui/dynamically-filtering-fetchrequest-with-swiftui
+ 
+ One of the SwiftUI questions I have been asked more than any other is this :
+ _How can I dynamically change a Core Data @FetchRequest_
+ _to use a different predicate or sort order ?_
+ The question arises because fetch requests are created as a property ,
+ so
+ if you try to make them reference another property
+ Swift will refuse .
+ There is a simple solution here ,
+ and it is usually pretty obvious in retrospect
+ because it is exactly how everything else works :
+ we should carve off the functionality we want into a separate view ,
+ then inject values into it .
+ */
 
 import SwiftUI
 import CoreData
 
-struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
 
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
+
+struct ContentView: View {
+    
+     // ///////////////////////
+    // MARK: PROPERTY WRAPPERS
+    
+    @Environment(\.managedObjectContext) var managedObjectContext
+    
+//    @FetchRequest(entity : Singer.entity() ,
+//                  sortDescriptors : [] ,
+//                  predicate : nil) var singers: FetchedResults<Singer>
+    
+    @State private var lastNameFilter = "A"
+    
+    
+    
+    
+     // /////////////////////////
+    // MARK: COMPUTED PROPERTIES
 
     var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-            }
-            .onDelete(perform: deleteItems)
-        }
-        .toolbar {
-            #if os(iOS)
-            EditButton()
-            #endif
+        
+        VStack {
+            FilteredListView(filter : lastNameFilter)
+            Button("Create Singers") {
+                let taylor: Singer = Singer(context : managedObjectContext)
+                taylor.firstName = "Taylor"
+                taylor.lastName = "Swift"
 
-            Button(action: addItem) {
-                Label("Add Item", systemImage: "plus")
-            }
-        }
-    }
+                let ed = Singer(context : managedObjectContext)
+                ed.firstName = "Ed"
+                ed.lastName = "Sheeran"
 
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+                let adele = Singer(context : managedObjectContext)
+                adele.firstName = "Adele"
+                adele.lastName = "Adkins"
 
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                try? managedObjectContext.save()
             }
+            Group {
+                Button("Show A") {
+                    self.lastNameFilter = "A"
+                }
+                Button("Show S") {
+                    self.lastNameFilter = "S"
+                }
+                .padding()
+            }
+            .font(.title)
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
+    
+    
+    
+     // /////////////////////////
+    // MARK: INITIALIZER METHODS
+    
+    init() {}
 }
 
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
+
+
+
+
+ // ///////////////
+//  MARK: PREVIEWS
 
 struct ContentView_Previews: PreviewProvider {
+    
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        
+        ContentView()
     }
 }
