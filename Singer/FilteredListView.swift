@@ -52,10 +52,10 @@ struct FilteredListView: View {
      // //////////////////////////
     //  MARK: INITIALIZER METHODS
     
-    init(filter: String) {
+    init(filter: String , with predicateOperator: String) {
         fetchRequest = FetchRequest(entity : Singer.entity() ,
                                     sortDescriptors : [NSSortDescriptor(keyPath : \Singer.firstName , ascending : true)] ,
-                                    predicate : NSPredicate(format : "lastName BEGINSWITH %@" , filter))
+                                    // predicate : NSPredicate(format : "lastName BEGINSWITH %@" , filter))
         /**
          That will run a fetch request
          using the current managed object context .
@@ -63,6 +63,7 @@ struct FilteredListView: View {
          we don’t even need to inject a managed object context into the environment
          — it will inherit the context from `ContentView` .
          */
+                                    predicate : NSPredicate(format : "lastName \(predicateOperator) %@" , filter))
     }
 }
 
@@ -77,6 +78,6 @@ struct FilteredListView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        FilteredListView(filter : "A")
+        FilteredListView(filter : "A" , with : "BEGINSWITH")
     }
 }
