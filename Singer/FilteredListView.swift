@@ -78,6 +78,18 @@ enum PredicateOperator: String {
     case contains
 }
 
+/*
+ enum PredicateType: String {
+     case beginsWith = "BEGINSWITH"
+     case contains = "CONTAINS"
+     case containsCI = "CONTAINS[c]"
+ }
+ */
+/**
+ `NOTE` OLIVIER :
+ This way you don't have to use `.uppercased()`
+ */
+
 
 
 
