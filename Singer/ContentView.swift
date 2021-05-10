@@ -45,7 +45,8 @@ struct ContentView: View {
         
         VStack(spacing : 20) {
             // FilteredListView(filter : lastNameFilter)
-            FilteredListView(filter : lastNameFilter , with : "BEGINSWITH")
+            FilteredListView(filter : lastNameFilter ,
+                             with : PredicateOperator.beginsWith)
             Group {
                 Button("Create Singers") {
                     let taylor: Singer = Singer(context : managedObjectContext)

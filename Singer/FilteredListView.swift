@@ -52,7 +52,9 @@ struct FilteredListView: View {
      // //////////////////////////
     //  MARK: INITIALIZER METHODS
     
-    init(filter: String , with predicateOperator: String) {
+    // init(filter: String) {
+    // init(filter: String , with predicateOperator: String) { // DAY 59.2
+    init(filter: String , with predicateOperator: PredicateOperator) { // DAY 59.3
         fetchRequest = FetchRequest(entity : Singer.entity() ,
                                     sortDescriptors : [NSSortDescriptor(keyPath : \Singer.firstName , ascending : true)] ,
                                     // predicate : NSPredicate(format : "lastName BEGINSWITH %@" , filter))
@@ -63,10 +65,18 @@ struct FilteredListView: View {
          we don’t even need to inject a managed object context into the environment
          — it will inherit the context from `ContentView` .
          */
-                                    predicate : NSPredicate(format : "lastName \(predicateOperator) %@" , filter))
+                                    // predicate : NSPredicate(format : "lastName \(predicateOperator) %@" , filter))
+                                    predicate : NSPredicate(format : "lastName \(PredicateOperator.beginsWith.rawValue.uppercased()) %@" , filter))
     }
 }
 
+
+
+enum PredicateOperator: String {
+    
+    case beginsWith
+    case contains
+}
 
 
 
@@ -75,9 +85,10 @@ struct FilteredListView: View {
 //  MARK: PREVIEWS
 
 struct FilteredListView_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        
-        FilteredListView(filter : "A" , with : "BEGINSWITH")
+
+        FilteredListView(filter : "A" ,
+                         with : PredicateOperator.beginsWith)
     }
 }
