@@ -7,6 +7,8 @@
 
 import CoreData
 
+
+
 struct PersistenceController {
     static let shared = PersistenceController()
 
@@ -32,6 +34,11 @@ struct PersistenceController {
 
     init(inMemory: Bool = false) {
         container = NSPersistentContainer(name: "Singer")
+        
+        // OLIVIER :
+        // container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy // OLIVIER : This doesn't appear to work ?
+        
+        
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }

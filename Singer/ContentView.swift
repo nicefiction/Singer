@@ -43,31 +43,30 @@ struct ContentView: View {
 
     var body: some View {
         
-        VStack {
+        VStack(spacing : 20) {
             FilteredListView(filter : lastNameFilter)
-            Button("Create Singers") {
-                let taylor: Singer = Singer(context : managedObjectContext)
-                taylor.firstName = "Taylor"
-                taylor.lastName = "Swift"
-
-                let ed = Singer(context : managedObjectContext)
-                ed.firstName = "Ed"
-                ed.lastName = "Sheeran"
-
-                let adele = Singer(context : managedObjectContext)
-                adele.firstName = "Adele"
-                adele.lastName = "Adkins"
-
-                try? managedObjectContext.save()
-            }
             Group {
+                Button("Create Singers") {
+                    let taylor: Singer = Singer(context : managedObjectContext)
+                    taylor.firstName = "Taylor"
+                    taylor.lastName = "Swift"
+                    
+                    let ed = Singer(context : managedObjectContext)
+                    ed.firstName = "Ed"
+                    ed.lastName = "Sheeran"
+                    
+                    let adele = Singer(context : managedObjectContext)
+                    adele.firstName = "Adele"
+                    adele.lastName = "Adkins"
+                    
+                    try? managedObjectContext.save()
+                }
                 Button("Show A") {
                     self.lastNameFilter = "A"
                 }
                 Button("Show S") {
                     self.lastNameFilter = "S"
                 }
-                .padding()
             }
             .font(.title)
         }
